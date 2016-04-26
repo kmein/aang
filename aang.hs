@@ -1,17 +1,23 @@
 {-# LANGUAGE BangPatterns #-}
+-- | The main module contains all the functionality of the "aang" program.
 module Main where
 
 import Data.Char (toLower, toUpper)
 import Data.List (nub, permutations)
 import System.Environment (getArgs)
 
+-- | Get a word as command line argument and output
+-- all possible element deconstructions of that word.
+--
+-- >>> ./aang Hask
+-- H As K
 main :: IO ()
 main =
     do input <- map toLower . head <$> getArgs
        let matches = findPeriodicTableMatches $ stringCombos input
        mapM_ (putStrLn . concatCapitalized) matches
     where
-      -- | > concatCapitalized ["ca","o","s"]
+      -- | >>> concatCapitalized ["ca","o","s"]
       -- "Ca O S"
       concatCapitalized :: [String] -> String
       concatCapitalized = unwords . map capitalize
@@ -53,7 +59,7 @@ findPeriodicTableMatches = filter (all (`elem` periodicTable))
 
 -- | Split a string into all possible groups of 1 and 2.
 --
--- > stringCombos "word"
+-- >>> stringCombos "word"
 -- [["w","o","r","d"],["wo","r","d"],["w","or","d"],["w","o","rd"],["wo","rd"]]
 stringCombos :: String -> [[String]]
 stringCombos str =
@@ -64,7 +70,7 @@ stringCombos str =
 -- split the string into groups of n based on the
 -- format spec.
 --
--- > partitionString [2, 2, 1] "hello"
+-- >>> partitionString [2, 2, 1] "hello"
 -- ["he", "ll", "o"]
 partitionString :: [Int] -> String -> [String]
 partitionString ints str =
@@ -77,7 +83,7 @@ partitionString ints str =
 -- Also, the `combos` function does not respect the law of commutativity.
 -- hence it includes sums which are merely permutations of one another.
 --
--- > combos 5
+-- >>> combos 5
 -- [[1,1,1,1,1],[2,1,1,1],[1,2,1,1],[1,1,2,1],[1,1,1,2],[2,2,1],[1,2,2],[2,1,2]]
 combos :: Int -> [[Int]]
 combos = concatMap uniquePermutations . rejectAbove 2 . partitions
@@ -92,7 +98,7 @@ combos = concatMap uniquePermutations . rejectAbove 2 . partitions
 
 -- | Generate all possible integer partitions.
 --
--- > partitions 5
+-- >>> partitions 5
 -- [[1,1,1,1,1],[2,1,1,1],[2,2,1],[3,1,1],[3,2],[4,1],[5]]
 partitions :: Int -> [[Int]]
 partitions d = go d d
