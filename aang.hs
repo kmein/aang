@@ -2,8 +2,8 @@
 -- | The main module contains all the functionality of the "aang" program.
 module Main where
 
+import Math.Combinat.Permutations (permuteMultiset)
 import Data.Char (toLower, toUpper)
-import Data.List (nub, permutations)
 import System.Environment (getArgs)
 
 -- | Get a word as command line argument and output
@@ -86,13 +86,7 @@ partitionString ints str =
 -- >>> combos 5
 -- [[1,1,1,1,1],[2,1,1,1],[1,2,1,1],[1,1,2,1],[1,1,1,2],[2,2,1],[1,2,2],[2,1,2]]
 combos :: Int -> [[Int]]
-combos = concatMap uniquePermutations . partitions 2
-    where
-      -- | Generate only unique permutations, e.g.
-      --
-      -- > uniquePermutations [1,1,1,1]
-      -- [[1,1,1,1]]
-      uniquePermutations = nub . permutations
+combos = concatMap permuteMultiset . partitions 2
 
 -- | Generate all possible integer partitions containing
 -- a given highest summand.
