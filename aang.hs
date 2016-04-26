@@ -86,25 +86,22 @@ partitionString ints str =
 -- >>> combos 5
 -- [[1,1,1,1,1],[2,1,1,1],[1,2,1,1],[1,1,2,1],[1,1,1,2],[2,2,1],[1,2,2],[2,1,2]]
 combos :: Int -> [[Int]]
-combos = concatMap uniquePermutations . rejectAbove 2 . partitions
+combos = concatMap uniquePermutations . partitions 2
     where
-      -- | Remove all partitions contaning numbers larger than n.
-      rejectAbove n = filter (all (<= n))
       -- | Generate only unique permutations, e.g.
       --
       -- > uniquePermutations [1,1,1,1]
       -- [[1,1,1,1]]
       uniquePermutations = nub . permutations
 
--- | Generate all possible integer partitions.
+-- | Generate all possible integer partitions containing
+-- a given highest summand.
 --
--- >>> partitions 5
--- [[1,1,1,1,1],[2,1,1,1],[2,2,1],[3,1,1],[3,2],[4,1],[5]]
-partitions :: Int -> [[Int]]
-partitions d = go d d
-    where
-      go !h !n =
-          if n == 0
-             then [[]]
-             else [a:as | a <- [1 .. min n h], as <- go a (n - a)]
+-- >>> partitions 2 5
+-- [[1,1,1,1,1],[2,1,1,1],[2,2,1]]
+partitions :: Int -> Int -> [[Int]]
+partitions h n =
+    if n == 0
+       then [[]]
+       else [a:as | a <- [1 .. min n h], as <- partitions a (n - a)]
 
