@@ -1,6 +1,6 @@
 name:                aang
 version:             0.1.0
-synopsis:            A silly program to check whether a word consists solely of chemicalelement symbols.
+synopsis:            A silly program to check whether a word consists solely of chemical element symbols.
 license:             BSD3
 license-file:        LICENSE
 author:              kmein
