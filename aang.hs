@@ -14,8 +14,7 @@ import System.Environment (getArgs)
 main :: IO ()
 main =
     do input <- map toLower . head <$> getArgs
-       let matches = findPeriodicTableMatches $ stringCombos input
-       mapM_ (putStrLn . concatCapitalized) matches
+       mapM_ (putStrLn . concatCapitalized) $ periods input
     where
       -- | >>> concatCapitalized ["ca","o","s"]
       -- "Ca O S"
@@ -25,11 +24,15 @@ main =
             capitalize xxs =
                 case xxs of [] -> []; (x:xs) -> toUpper x : xs
 
+isPeriodic :: String -> Bool
+isPeriodic = not . null . periods . map toLower
+
 -- | Find all string combos of which all substrings are contained within
 -- the element symbol in the periodic table of the elements.
-findPeriodicTableMatches :: [[String]] -> [[String]]
-findPeriodicTableMatches = filter (all (`elem` periodicTable))
+periods :: String -> [[String]]
+periods = findPeriodicTableMatches . stringCombos
     where
+      findPeriodicTableMatches = filter (all (`elem` periodicTable))
       periodicTable =
           ["ac","ag","al","am","ar","as","at","au"
           ,"b","ba","be","bh","bi","bk","br"
@@ -63,8 +66,7 @@ findPeriodicTableMatches = filter (all (`elem` periodicTable))
 -- [["w","o","r","d"],["wo","r","d"],["w","or","d"],["w","o","rd"],["wo","rd"]]
 stringCombos :: String -> [[String]]
 stringCombos str =
-    map (`partitionString` str) $
-    combos $ length str
+    map (`partitionString` str) $ combos $ length str
 
 -- | Given a 'format specification' and a string,
 -- split the string into groups of n based on the
