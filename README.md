@@ -1,5 +1,5 @@
 # aang
-A silly program to check whether a word consists solely of chemical element symbols.
+*A silly program to check whether a word consists solely of chemical element symbols.*
 
 For example,
 ```
