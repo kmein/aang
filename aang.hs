@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 -- | The main module contains all the functionality of the "aang" program.
 module Main where
 
