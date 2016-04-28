@@ -12,8 +12,8 @@ import System.Environment (getArgs)
 -- H As K
 main :: IO ()
 main =
-    do input <- map toLower . head <$> getArgs
-       mapM_ (putStrLn . concatCapitalized) $ periods input
+    map (map toLower) <$> getArgs >>=
+        mapM_ (mapM_ (putStrLn . concatCapitalized) . periods)
     where
       -- | >>> concatCapitalized ["ca","o","s"]
       -- "Ca O S"
