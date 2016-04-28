@@ -1,8 +1,11 @@
 -- | The main module contains all the functionality of the "aang" program.
 module Main where
 
-import Math.Combinat.Permutations (permuteMultiset)
+import Control.Monad (forM_)
 import Data.Char (toLower, toUpper)
+import qualified Data.Text as T
+import qualified Data.Text.IO as T
+import Math.Combinat.Permutations (permuteMultiset)
 import System.Environment (getArgs)
 
 -- | Get a word as command line argument and output
@@ -12,27 +15,29 @@ import System.Environment (getArgs)
 -- H As K
 main :: IO ()
 main =
-    do input <- map toLower . head <$> getArgs
-       mapM_ (putStrLn . concatCapitalized) $ periods input
+    map (T.toLower . T.pack) <$> getArgs >>=
+       mapM_ (mapM_ (T.putStrLn . concatCapitalized) . periods)
     where
       -- | >>> concatCapitalized ["ca","o","s"]
       -- "Ca O S"
-      concatCapitalized :: [String] -> String
-      concatCapitalized = unwords . map capitalize
+      concatCapitalized :: [T.Text] -> T.Text
+      concatCapitalized = T.unwords . map capitalize
           where
-            capitalize xxs =
-                case xxs of [] -> []; (x:xs) -> toUpper x : xs
+            capitalize str =
+                case T.uncons str of
+                  Nothing -> T.empty
+                  Just (c, cs) -> toUpper c `T.cons` cs
 
-isPeriodic :: String -> Bool
-isPeriodic = not . null . periods . map toLower
+isPeriodic :: T.Text -> Bool
+isPeriodic = not . null . periods . T.toLower
 
 -- | Find all string combos of which all substrings are contained within
 -- the element symbol in the periodic table of the elements.
-periods :: String -> [[String]]
+periods :: T.Text -> [[T.Text]]
 periods = findPeriodicTableMatches . stringCombos
     where
       findPeriodicTableMatches = filter (all (`elem` periodicTable))
-      periodicTable =
+      periodicTable = map T.pack
           ["ac","ag","al","am","ar","as","at","au"
           ,"b","ba","be","bh","bi","bk","br"
           ,"c","ca","cd","ce","cf","cl","cm","co","cr","cs","cu"
@@ -63,9 +68,9 @@ periods = findPeriodicTableMatches . stringCombos
 --
 -- >>> stringCombos "word"
 -- [["w","o","r","d"],["wo","r","d"],["w","or","d"],["w","o","rd"],["wo","rd"]]
-stringCombos :: String -> [[String]]
+stringCombos :: T.Text -> [[T.Text]]
 stringCombos str =
-    map (`partitionString` str) $ combos $ length str
+    map (`partitionString` str) $ combos $ T.length str
 
 -- | Given a 'format specification' and a string,
 -- split the string into groups of n based on the
@@ -73,12 +78,12 @@ stringCombos str =
 --
 -- >>> partitionString [2, 2, 1] "hello"
 -- ["he", "ll", "o"]
-partitionString :: [Int] -> String -> [String]
+partitionString :: [Int] -> T.Text -> [T.Text]
 partitionString ints str =
     case ints of
       [] -> []
       (n:ns) -> fs : partitionString ns bs
-          where (fs, bs) = splitAt n str
+          where (fs, bs) = T.splitAt n str
 
 -- | Split an integer into sums containing either 1 or 2.
 -- Also, the `combos` function does not respect the law of commutativity.
