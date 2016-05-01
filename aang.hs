@@ -73,7 +73,7 @@ stringCombos str =
 --
 -- >>> partitionString [2, 2, 1] "hello"
 -- ["he", "ll", "o"]
-partitionString :: [Int] -> String -> [String]
+partitionString :: [Int] -> [a] -> [[a]]
 partitionString [] _ = []
 partitionString (n:ns) str = fs : partitionString ns bs
     where (fs, bs) = splitAt n str
@@ -95,4 +95,3 @@ combos = concatMap permuteMultiset . partitions 2
 partitions :: Int -> Int -> [[Int]]
 partitions _ 0 = [[]]
 partitions h n = [a:as | a <- [1 .. min n h], as <- partitions a (n - a)]
-
