@@ -20,8 +20,8 @@ main =
       concatCapitalized :: [String] -> String
       concatCapitalized = unwords . map capitalize
           where
-            capitalize xxs =
-                case xxs of [] -> []; (x:xs) -> toUpper x : xs
+            capitalize [] = []
+            capitalize (x:xs) = toUpper x : xs
 
 isPeriodic :: String -> Bool
 isPeriodic = not . null . periods . map toLower
@@ -74,11 +74,9 @@ stringCombos str =
 -- >>> partitionString [2, 2, 1] "hello"
 -- ["he", "ll", "o"]
 partitionString :: [Int] -> String -> [String]
-partitionString ints str =
-    case ints of
-      [] -> []
-      (n:ns) -> fs : partitionString ns bs
-          where (fs, bs) = splitAt n str
+partitionString [] _ = []
+partitionString (n:ns) str = fs : partitionString ns bs
+    where (fs, bs) = splitAt n str
 
 -- | Split an integer into sums containing either 1 or 2.
 -- Also, the `combos` function does not respect the law of commutativity.
@@ -95,8 +93,6 @@ combos = concatMap permuteMultiset . partitions 2
 -- >>> partitions 2 5
 -- [[1,1,1,1,1],[2,1,1,1],[2,2,1]]
 partitions :: Int -> Int -> [[Int]]
-partitions h n =
-    if n == 0
-       then [[]]
-       else [a:as | a <- [1 .. min n h], as <- partitions a (n - a)]
+partitions _ 0 = [[]]
+partitions h n = [a:as | a <- [1 .. min n h], as <- partitions a (n - a)]
 
