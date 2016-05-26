@@ -1,8 +1,9 @@
 -- | The main module contains all the functionality of the "aang" program.
 module Main where
 
-import Math.Combinat.Permutations (permuteMultiset)
+import Control.Monad.State (evalState, state)
 import Data.Char (toLower, toUpper)
+import Math.Combinat.Permutations (permuteMultiset)
 import System.Environment (getArgs)
 
 -- | Get a word as command line argument and output
@@ -12,7 +13,7 @@ import System.Environment (getArgs)
 -- H As K
 main :: IO ()
 main =
-    map (map toLower) <$> getArgs >>=
+    fmap (fmap toLower) <$> getArgs >>=
         mapM_ (mapM_ (putStrLn . concatCapitalized) . periods)
     where
       -- | >>> concatCapitalized ["ca","o","s"]
@@ -29,9 +30,8 @@ isPeriodic = not . null . periods . map toLower
 -- | Find all string combos of which all substrings are contained within
 -- the element symbol in the periodic table of the elements.
 periods :: String -> [[String]]
-periods = findPeriodicTableMatches . stringCombos
+periods = filter (all (`elem` periodicTable)) . stringCombos
     where
-      findPeriodicTableMatches = filter (all (`elem` periodicTable))
       periodicTable =
           ["ac","ag","al","am","ar","as","at","au"
           ,"b","ba","be","bh","bi","bk","br"
@@ -64,8 +64,7 @@ periods = findPeriodicTableMatches . stringCombos
 -- >>> stringCombos "word"
 -- [["w","o","r","d"],["wo","r","d"],["w","or","d"],["w","o","rd"],["wo","rd"]]
 stringCombos :: String -> [[String]]
-stringCombos str =
-    map (`partitionString` str) $ combos $ length str
+stringCombos str = map (`partitionString` str) $ combos $ length str
 
 -- | Given a 'format specification' and a string,
 -- split the string into groups of n based on the
@@ -77,6 +76,9 @@ partitionString :: [Int] -> [a] -> [[a]]
 partitionString [] _ = []
 partitionString (n:ns) str = fs : partitionString ns bs
     where (fs, bs) = splitAt n str
+
+partitionString' :: [Int] -> [a] -> [[a]]
+partitionString' = evalState . traverse (state . splitAt)
 
 -- | Split an integer into sums containing either 1 or 2.
 -- Also, the `combos` function does not respect the law of commutativity.
