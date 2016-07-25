@@ -1,10 +1,14 @@
 -- | The main module contains all the functionality of the "aang" program.
 module Main where
 
-import Control.Monad.State (evalState, state)
+-- import Control.Monad.State (evalState, state)
+import Control.Monad (forM_)
 import Data.Char (toLower, toUpper)
+import Data.Maybe (mapMaybe)
 import Math.Combinat.Permutations (permuteMultiset)
+import Safe (atMay)
 import System.Environment (getArgs)
+import Text.CSV (parseCSVFromFile)
 
 -- | Get a word as command line argument and output
 -- all possible element deconstructions of that word.
@@ -13,10 +17,14 @@ import System.Environment (getArgs)
 -- H As K
 main :: IO ()
 main =
-    do args <- fmap toLower <$> getArgs
-       periodicTable <- (lines . fmap toLower) <$> readFile "periodic-table.txt"
-       forM_ args $ \arg ->
-           mapM_ (putStrLn . concatCapitalized) $ periods periodicTable arg
+    do args <- map (map toLower) <$> getArgs
+       csvPeriodicTable <- parseCSVFromFile "pt-data1.csv"
+       case csvPeriodicTable of
+         Left err -> putStrLn $ "Parse error: " ++ show err
+         Right rows | elements <- map (map toLower) $ mapMaybe (`atMay` 1) rows ->
+             forM_ args $ \arg ->
+                 mapM_ (putStrLn . concatCapitalized) $
+                 periods elements arg
     where
       -- | >>> concatCapitalized ["ca","o","s"]
       -- "Ca O S"
@@ -26,7 +34,7 @@ main =
             capitalize [] = []
             capitalize (x:xs) = toUpper x : xs
 
-isPeriodic :: String -> Bool
+isPeriodic :: [String] -> String -> Bool
 isPeriodic tbl = not . null . periods tbl . map toLower
 
 -- | Find all string combos of which all substrings are contained within
@@ -52,8 +60,8 @@ partitionString [] _ = []
 partitionString (n:ns) str = fs : partitionString ns bs
     where (fs, bs) = splitAt n str
 
-partitionString' :: [Int] -> [a] -> [[a]]
-partitionString' = evalState . traverse (state . splitAt)
+-- partitionString' :: [Int] -> [a] -> [[a]]
+-- partitionString' = evalState . traverse (state . splitAt)
 
 -- | Split an integer into sums containing either 1 or 2.
 -- Also, the `combos` function does not respect the law of commutativity.
