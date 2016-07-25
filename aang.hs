@@ -13,8 +13,10 @@ import System.Environment (getArgs)
 -- H As K
 main :: IO ()
 main =
-    fmap (fmap toLower) <$> getArgs >>=
-        mapM_ (mapM_ (putStrLn . concatCapitalized) . periods)
+    do args <- fmap toLower <$> getArgs
+       periodicTable <- (lines . fmap toLower) <$> readFile "periodic-table.txt"
+       forM_ args $ \arg ->
+           mapM_ (putStrLn . concatCapitalized) $ periods periodicTable arg
     where
       -- | >>> concatCapitalized ["ca","o","s"]
       -- "Ca O S"
@@ -25,39 +27,12 @@ main =
             capitalize (x:xs) = toUpper x : xs
 
 isPeriodic :: String -> Bool
-isPeriodic = not . null . periods . map toLower
+isPeriodic tbl = not . null . periods tbl . map toLower
 
 -- | Find all string combos of which all substrings are contained within
 -- the element symbol in the periodic table of the elements.
-periods :: String -> [[String]]
-periods = filter (all (`elem` periodicTable)) . stringCombos
-    where
-      periodicTable =
-          ["ac","ag","al","am","ar","as","at","au"
-          ,"b","ba","be","bh","bi","bk","br"
-          ,"c","ca","cd","ce","cf","cl","cm","co","cr","cs","cu"
-          ,"db","ds","dy"
-          ,"er","es","eu"
-          ,"f","fe","fm","fr"
-          ,"ga","gd","ge"
-          ,"h","he","hf","hg","ho","hs"
-          ,"i","in","ir"
-          ,"k","kr"
-          ,"la","li","lr","lu"
-          ,"md","mg","mn","mo","mt"
-          ,"n","na","nb","nd","ne","ni","no","np"
-          ,"o","os"
-          ,"p","pa","pb","pd","pm","po","pr","pt","pu"
-          ,"ra","rb","re","rf","rg","rh","rn","ru"
-          ,"s","sb","sc","se","sg","si","sm","sn","sr"
-          ,"ta","tb","tc","te","th","ti","tl","tm"
-          ,"u"
-          ,"v"
-          ,"w"
-          ,"xe"
-          ,"y","yb"
-          ,"zn","zr"
-          ]
+periods :: [String] -> String -> [[String]]
+periods periodicTable = filter (all (`elem` periodicTable)) . stringCombos
 
 -- | Split a string into all possible groups of 1 and 2.
 --
