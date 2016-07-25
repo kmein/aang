@@ -13,5 +13,9 @@ cabal-version:       >=1.10
 
 executable aang
   main-is:             aang.hs
-  build-depends:       base >=4.8 && <4.9, combinat, mtl
+  build-depends:       base >=4.8 && <4.9
+                     , combinat
+                     , csv
+                     , mtl
+                     , safe
   default-language:    Haskell2010
