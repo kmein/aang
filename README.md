@@ -1,1 +1,21 @@
 # aang
+*A silly program to check whether a word consists solely of chemical element symbols.*
+
+For example,
+```
+$ aang wrestler
+W Re S Tl Er
+```
+and sadly,
+```
+$ aang haskell
+$
+```
+
+## Trivia
+* About 12.054% of the English dictionary can be written entirely as successive chemical element symbols.
+  This was checked against `/usr/share/dict/words` (99171 words) of which 11954 came out as positive.
+* For the German dictionary `/usr/share/dict/ngerman` (339099), the percentage
+  amounts to around 8.333%, that is 28257 words.
+* The name Aang comes from the television series 'Avatar - The Last Airbender' in which Aang is also called
+  'Lord of the Elements' or 'Der Herr der Elemente' in German (pun intended).
