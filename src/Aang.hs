@@ -1,38 +1,8 @@
--- | The main module contains all the functionality of the "aang" program.
-module Main where
+-- | This module contains the basic functionality of the »aang« program.
+module Aang where
 
--- import Control.Monad.State (evalState, state)
-import Control.Monad (forM_)
-import Data.Char (toLower, toUpper)
-import Data.Maybe (mapMaybe)
+import Data.Char (toLower)
 import Math.Combinat.Permutations (permuteMultiset)
-import Safe (atMay)
-import System.Environment (getArgs)
-import Text.CSV (parseCSVFromFile)
-
--- | Get a word as command line argument and output
--- all possible element deconstructions of that word.
---
--- >>> ./aang Hask
--- H As K
-main :: IO ()
-main =
-    do args <- map (map toLower) <$> getArgs
-       csvPeriodicTable <- parseCSVFromFile "pt-data1.csv"
-       case csvPeriodicTable of
-         Left err -> putStrLn $ "Parse error: " ++ show err
-         Right rows | elements <- map (map toLower) $ mapMaybe (`atMay` 1) rows ->
-             forM_ args $ \arg ->
-                 mapM_ (putStrLn . concatCapitalized) $
-                 periods elements arg
-    where
-      -- | >>> concatCapitalized ["ca","o","s"]
-      -- "Ca O S"
-      concatCapitalized :: [String] -> String
-      concatCapitalized = unwords . map capitalize
-          where
-            capitalize [] = []
-            capitalize (x:xs) = toUpper x : xs
 
 isPeriodic :: [String] -> String -> Bool
 isPeriodic tbl = not . null . periods tbl . map toLower
@@ -45,7 +15,7 @@ periods periodicTable = filter (all (`elem` periodicTable)) . stringCombos
 -- | Split a string into all possible groups of 1 and 2.
 --
 -- >>> stringCombos "word"
--- [["w","o","r","d"],["wo","r","d"],["w","or","d"],["w","o","rd"],["wo","rd"]]
+-- [["w","o","r","d"],["w","o","rd"],["w","or","d"],["wo","r","d"],["wo","rd"]]
 stringCombos :: String -> [[String]]
 stringCombos str = map (`partitionString` str) $ combos $ length str
 
@@ -54,7 +24,7 @@ stringCombos str = map (`partitionString` str) $ combos $ length str
 -- format spec.
 --
 -- >>> partitionString [2, 2, 1] "hello"
--- ["he", "ll", "o"]
+-- ["he","ll","o"]
 partitionString :: [Int] -> [a] -> [[a]]
 partitionString [] _ = []
 partitionString (n:ns) str = fs : partitionString ns bs
@@ -68,7 +38,7 @@ partitionString (n:ns) str = fs : partitionString ns bs
 -- hence it includes sums which are merely permutations of one another.
 --
 -- >>> combos 5
--- [[1,1,1,1,1],[2,1,1,1],[1,2,1,1],[1,1,2,1],[1,1,1,2],[2,2,1],[1,2,2],[2,1,2]]
+-- [[1,1,1,1,1],[1,1,1,2],[1,1,2,1],[1,2,1,1],[2,1,1,1],[1,2,2],[2,1,2],[2,2,1]]
 combos :: Int -> [[Int]]
 combos = concatMap permuteMultiset . partitions 2
 

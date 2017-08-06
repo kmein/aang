@@ -1,21 +1,45 @@
 name:                aang
-version:             0.1.0
+version:             0.1.0.0
 synopsis:            A silly program to check whether a word consists solely of chemical element symbols.
+homepage:            https://github.com/kmein/aang#readme
 license:             BSD3
 license-file:        LICENSE
-author:              kmein
+author:              Kierán Meinhardt
 maintainer:          kieran.meinhardt@gmail.com
-copyright:           (c) 2016 Kierán Meinhardt
-category:            Language
+copyright:           Copyright: (c) 2017 Kierán Meinhardt
+category:            Text
 build-type:          Simple
-extra-source-files:  ChangeLog.md
+extra-source-files:  README.md
 cabal-version:       >=1.10
 
-executable aang
-  main-is:             aang.hs
-  build-depends:       base >=4.8 && <4.9
+library
+  hs-source-dirs:      src
+  exposed-modules:     Aang
+  build-depends:       base >= 4.7 && < 5
                      , combinat
+  default-language:    Haskell2010
+  ghc-options:         -Wall -Werror
+
+executable aang-exe
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  build-depends:       base
+                     , aang
                      , csv
-                     , mtl
                      , safe
   default-language:    Haskell2010
+  ghc-options:         -Wall -Werror
+
+test-suite aang-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , aang
+                     , doctest
+  default-language:    Haskell2010
+  ghc-options:         -Wall -Werror
+
+source-repository head
+  type:     git
+  location: https://github.com/kmein/aang

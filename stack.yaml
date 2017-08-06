@@ -1,7 +1,5 @@
-flags: {}
-extra-package-dbs: []
+resolver: lts-9.0
 packages:
-- '.'
+- .
 extra-deps:
-- combinat-0.2.8.1
-resolver: lts-5.14
+- combinat-0.2.8.2
