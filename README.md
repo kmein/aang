@@ -1,4 +1,4 @@
-# aang
+# aang [![Build Status](https://travis-ci.org/kmein/aang.svg?branch=master)](https://travis-ci.org/kmein/aang)
 *A silly program to check whether a word consists solely of chemical element symbols.*
 
 For example,
