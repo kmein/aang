@@ -5,7 +5,7 @@ import Math.Combinat.Permutations (permuteMultiset)
 import qualified Data.Text as Text
 
 isPeriodic :: [Text.Text] -> Text.Text -> Bool
-isPeriodic tbl = not . null . periods tbl . Text.toLower
+isPeriodic tbl = not . null . periods tbl
 
 -- | Find all string combos of which all substrings are contained within
 -- the element symbol in the periodic table of the elements.
@@ -28,11 +28,11 @@ stringCombos str = map (`partitionString` str) $ combos $ Text.length str
 partitionString :: [Int] -> Text.Text -> [Text.Text]
 partitionString [] _ = []
 partitionString (n:ns) str = fs : partitionString ns bs
-    where (fs, bs) = Text.splitAt n str
+  where
+    (fs, bs) = Text.splitAt n str
 
 -- partitionString' :: [Int] -> [a] -> [[a]]
 -- partitionString' = evalState . traverse (state . splitAt)
-
 -- | Split an integer into sums containing either 1 or 2.
 -- Also, the `combos` function does not respect the law of commutativity.
 -- hence it includes sums which are merely permutations of one another.
@@ -49,4 +49,7 @@ combos = concatMap permuteMultiset . partitions 2
 -- [[1,1,1,1,1],[2,1,1,1],[2,2,1]]
 partitions :: Int -> Int -> [[Int]]
 partitions _ 0 = [[]]
-partitions h n = [a:as | a <- [1 .. min n h], as <- partitions a (n - a)]
+partitions h n =
+    [ a : as
+    | a <- [1 .. min n h]
+    , as <- partitions a (n - a) ]

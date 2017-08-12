@@ -1,4 +1,6 @@
-module Main (main) where
+module Main
+  ( main
+  ) where
 
 import Aang
 
@@ -23,7 +25,8 @@ main = do
     case csvPeriodicTable of
         Left err -> putStrLn $ "Parse error: " ++ show err
         Right rows ->
-            let elements = map Text.toLower $ mapMaybe (fmap Text.pack . (`atMay` 1)) rows
+            let elements =
+                    map Text.toLower $ mapMaybe (fmap Text.pack . (`atMay` 1)) rows
             in forM_ args $
                mapM_ (Text.putStrLn . concatCapitalized) . periods elements
 

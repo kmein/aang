@@ -1,5 +1,5 @@
 name:                aang
-version:             1.0.0
+version:             1.0.1
 synopsis:            A silly program to check whether a word consists solely of chemical element symbols.
 homepage:            https://github.com/kmein/aang#readme
 license:             BSD3
@@ -39,6 +39,9 @@ test-suite aang-test
   build-depends:       base
                      , aang
                      , doctest
+                     , tasty
+                     , tasty-hunit
+                     , tasty-quickcheck
   default-language:    Haskell2010
   ghc-options:         -Wall -Werror
 
