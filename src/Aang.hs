@@ -1,34 +1,34 @@
 -- | This module contains the basic functionality of the »aang« program.
 module Aang where
 
-import Data.Char (toLower)
 import Math.Combinat.Permutations (permuteMultiset)
+import qualified Data.Text as Text
 
-isPeriodic :: [String] -> String -> Bool
-isPeriodic tbl = not . null . periods tbl . map toLower
+isPeriodic :: [Text.Text] -> Text.Text -> Bool
+isPeriodic tbl = not . null . periods tbl . Text.toLower
 
 -- | Find all string combos of which all substrings are contained within
 -- the element symbol in the periodic table of the elements.
-periods :: [String] -> String -> [[String]]
+periods :: [Text.Text] -> Text.Text -> [[Text.Text]]
 periods periodicTable = filter (all (`elem` periodicTable)) . stringCombos
 
 -- | Split a string into all possible groups of 1 and 2.
 --
--- >>> stringCombos "word"
+-- >>> stringCombos (Text.pack "word")
 -- [["w","o","r","d"],["w","o","rd"],["w","or","d"],["wo","r","d"],["wo","rd"]]
-stringCombos :: String -> [[String]]
-stringCombos str = map (`partitionString` str) $ combos $ length str
+stringCombos :: Text.Text -> [[Text.Text]]
+stringCombos str = map (`partitionString` str) $ combos $ Text.length str
 
 -- | Given a 'format specification' and a string,
 -- split the string into groups of n based on the
 -- format spec.
 --
--- >>> partitionString [2, 2, 1] "hello"
+-- >>> partitionString [2, 2, 1] (Text.pack "hello")
 -- ["he","ll","o"]
-partitionString :: [Int] -> [a] -> [[a]]
+partitionString :: [Int] -> Text.Text -> [Text.Text]
 partitionString [] _ = []
 partitionString (n:ns) str = fs : partitionString ns bs
-    where (fs, bs) = splitAt n str
+    where (fs, bs) = Text.splitAt n str
 
 -- partitionString' :: [Int] -> [a] -> [[a]]
 -- partitionString' = evalState . traverse (state . splitAt)
