@@ -3,12 +3,12 @@
 
 For example,
 ```
-$ aang wrestler
+$ stack exec aang-exe -- wrestler
 W Re S Tl Er
 ```
 and sadly,
 ```
-$ aang haskell
+$ stack exec aang-exe -- haskell
 $
 ```
 
