@@ -17,5 +17,7 @@ $
   This was checked against `/usr/share/dict/words` (99171 words) of which 11954 came out as positive.
 * For the German dictionary `/usr/share/dict/ngerman` (339099), the percentage
   amounts to around 8.333%, that is 28257 words.
-* The name Aang comes from the television series 'Avatar - The Last Airbender' in which Aang is also called
-  'Lord of the Elements' or 'Der Herr der Elemente' in German (pun intended).
+* The name Aang comes from the television series *Avatar – The Last Airbender* in which Aang, the main character, 
+  is the *Lord of the Elements* (pun intended).
+  
+![That's him: Aang](https://vignette.wikia.nocookie.net/nicktheultimaswordwielder/images/f/f1/Aang-2-.jpg)
